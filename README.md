@@ -20,7 +20,27 @@ A modern full-stack application featuring Google OAuth authentication with React
 
 ## 🚀 Quick Start
 
-For a quick setup guide, see [QUICKSTART.md](QUICKSTART.md)
+### Option 1: Docker Compose (Recommended)
+
+Run the entire application stack with a single command:
+
+```bash
+# Copy environment template
+cp .env.docker.example .env
+
+# Edit .env and add your Google OAuth credentials
+
+# Start all services
+docker-compose up --build
+```
+
+Access the application at http://localhost
+
+👉 **See [DOCKER.md](DOCKER.md) for complete Docker deployment guide**
+
+### Option 2: Local Development
+
+For local development setup, see [QUICKSTART.md](QUICKSTART.md)
 
 For detailed architecture information, see [ARCHITECTURE.md](ARCHITECTURE.md)
 

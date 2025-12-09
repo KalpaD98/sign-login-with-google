@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 echo "========================================="
 echo "Setting up Sign-in with Google Project"
