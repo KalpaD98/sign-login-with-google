@@ -1,35 +1,38 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Header
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
-from typing import Dict, Optional
+import logging
 
 from app.core.database import get_db
 from app.core.config import settings
 from app.core.security import create_access_token
+from app.core.dependencies import get_current_user
 from app.models.user import User
-from app.schemas.user import GoogleAuthResponse, UserResponse
+from app.schemas.user import GoogleAuthResponse, GoogleTokenRequest, UserResponse
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 
 
 @router.post("/google", response_model=GoogleAuthResponse)
-async def google_auth(token_data: Dict[str, str], db: Session = Depends(get_db)):
+def google_auth(token_request: GoogleTokenRequest, db: Session = Depends(get_db)):
     """
     Authenticate user with Google OAuth token
+    
+    Args:
+        token_request: Google OAuth token request
+        db: Database session
+        
+    Returns:
+        GoogleAuthResponse: Access token and user information
     """
     try:
-        # Verify the token with Google
-        token = token_data.get("token")
-        if not token:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Token is required"
-            )
-        
         # Verify the Google token
         idinfo = id_token.verify_oauth2_token(
-            token, 
+            token_request.token, 
             google_requests.Request(), 
             settings.GOOGLE_CLIENT_ID
         )
@@ -42,6 +45,7 @@ async def google_auth(token_data: Dict[str, str], db: Session = Depends(get_db))
         profile_picture = idinfo.get("picture")
         
         if not email:
+            logger.warning("Google token verification succeeded but no email found")
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Email not found in Google token"
@@ -52,6 +56,7 @@ async def google_auth(token_data: Dict[str, str], db: Session = Depends(get_db))
         
         if not user:
             # Create new user
+            logger.info(f"Creating new user with email: {email}")
             user = User(
                 email=email,
                 first_name=first_name,
@@ -64,6 +69,7 @@ async def google_auth(token_data: Dict[str, str], db: Session = Depends(get_db))
             db.refresh(user)
         else:
             # Update existing user information
+            logger.info(f"Updating existing user: {email}")
             user.first_name = first_name
             user.last_name = last_name
             user.profile_picture = profile_picture
@@ -81,58 +87,33 @@ async def google_auth(token_data: Dict[str, str], db: Session = Depends(get_db))
         )
         
     except ValueError as e:
-        # Invalid token
+        # Invalid token - log detailed error but return generic message
+        logger.error(f"Google token verification failed: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Invalid token: {str(e)}"
+            detail="Invalid or expired Google token"
         )
+    except HTTPException:
+        # Re-raise HTTP exceptions as-is
+        raise
     except Exception as e:
+        # Log unexpected errors but don't expose details to client
+        logger.exception(f"Unexpected error during authentication: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Authentication failed: {str(e)}"
+            detail="Authentication failed. Please try again later."
         )
 
 
 @router.get("/me", response_model=UserResponse)
-async def get_current_user(
-    authorization: Optional[str] = Header(None),
-    db: Session = Depends(get_db)
-):
+def get_me(current_user: User = Depends(get_current_user)):
     """
-    Get current user information
+    Get current authenticated user information
+    
+    Args:
+        current_user: Current authenticated user (injected by dependency)
+        
+    Returns:
+        UserResponse: Current user information
     """
-    from app.core.security import verify_token
-    
-    # Extract token from Authorization header
-    if not authorization:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authorization header is required"
-        )
-    
-    # Expected format: "Bearer <token>"
-    parts = authorization.split()
-    if len(parts) != 2 or parts[0].lower() != "bearer":
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authorization header format. Expected: Bearer <token>"
-        )
-    
-    token = parts[1]
-    payload = verify_token(token)
-    if not payload:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication credentials"
-        )
-    
-    user_id = payload.get("sub")
-    user = db.query(User).filter(User.id == int(user_id)).first()
-    
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found"
-        )
-    
-    return UserResponse.model_validate(user)
+    return UserResponse.model_validate(current_user)

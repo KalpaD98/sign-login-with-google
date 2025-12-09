@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
 from typing import Optional
 
@@ -21,6 +21,11 @@ class UserResponse(UserBase):
     updated_at: Optional[datetime] = None
 
     model_config = {"from_attributes": True}
+
+
+class GoogleTokenRequest(BaseModel):
+    """Request schema for Google OAuth token"""
+    token: str = Field(..., min_length=1, description="Google OAuth ID token")
 
 
 class GoogleAuthResponse(BaseModel):

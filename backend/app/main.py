@@ -1,11 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.core.database import engine, Base
 from app.routes import auth
 
-# Create database tables
-Base.metadata.create_all(bind=engine)
+# Note: Database tables are now managed by Alembic migrations
+# Run: alembic upgrade head
 
 app = FastAPI(
     title="Google Sign-In API",
