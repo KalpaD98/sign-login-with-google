@@ -3,6 +3,10 @@
 echo "========================================="
 echo "Setting up Sign-in with Google Project"
 echo "========================================="
+echo ""
+echo "Note: This script is for Unix-like systems (Linux, macOS)."
+echo "For Windows, see QUICKSTART.md for manual setup instructions."
+echo ""
 
 # Backend setup
 echo ""
@@ -14,6 +18,7 @@ echo "Creating Python virtual environment..."
 python3 -m venv venv
 
 # Activate virtual environment
+# Note: On Windows use: venv\Scripts\activate
 source venv/bin/activate
 
 # Install dependencies

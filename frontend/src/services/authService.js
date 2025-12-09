@@ -5,6 +5,9 @@ export const authenticateWithGoogle = async (googleToken) => {
     const response = await api.post('/auth/google', { token: googleToken });
     
     // Store the token and user data
+    // Note: localStorage is used for simplicity in this demo.
+    // For production, consider using httpOnly cookies or a more secure
+    // storage mechanism to protect against XSS attacks.
     localStorage.setItem('access_token', response.data.access_token);
     localStorage.setItem('user', JSON.stringify(response.data.user));
     

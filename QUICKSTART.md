@@ -31,6 +31,8 @@ Ensure you have:
 
 ## Step 2: Automated Setup
 
+### For Linux/macOS
+
 Run the setup script to install all dependencies:
 
 ```bash
@@ -38,7 +40,30 @@ chmod +x setup.sh
 ./setup.sh
 ```
 
-This will:
+### For Windows
+
+Run these commands manually:
+
+```powershell
+# Backend setup
+cd backend
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+copy .env.example .env
+cd ..
+
+# Frontend setup
+cd frontend
+npm install
+copy .env.example .env
+cd ..
+
+# Start PostgreSQL
+docker-compose up -d
+```
+
+The setup will:
 - Create Python virtual environment
 - Install backend dependencies
 - Install frontend dependencies
@@ -76,6 +101,7 @@ VITE_API_BASE_URL=http://localhost:8000
 
 ### Terminal 1: Start Backend
 
+**Linux/macOS:**
 ```bash
 cd backend
 source venv/bin/activate
@@ -86,6 +112,13 @@ Or use the convenience script:
 ```bash
 cd backend
 ./run.sh
+```
+
+**Windows:**
+```powershell
+cd backend
+venv\Scripts\activate
+uvicorn app.main:app --reload --port 8000
 ```
 
 ### Terminal 2: Start Frontend
