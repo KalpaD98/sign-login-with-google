@@ -42,7 +42,7 @@ alembic upgrade head
 cd ..
 
 # 4. Start development
-make docker-dev-up
+make docker-up
 ```
 
 **Access:**
@@ -51,11 +51,6 @@ make docker-dev-up
 - API Docs: http://localhost:8000/docs
 
 ### Alternative Options
-
-**Docker Production Mode:**
-```bash
-make docker-up-build
-```
 
 **Local Development:**
 ```bash
@@ -140,8 +135,6 @@ This project is licensed under the MIT License.
 ## Documentation
 
 - **[QUICKSTART.md](docs/QUICKSTART.md)** - Complete setup guide with troubleshooting
-- **[DOCKER.md](docs/DOCKER.md)** - Docker deployment guide
-- **[MAKEFILE.md](docs/MAKEFILE.md)** - All available Make commands
 - **[CONTRIBUTING.md](docs/CONTRIBUTING.md)** - Contribution guidelines
 
 ## Acknowledgments

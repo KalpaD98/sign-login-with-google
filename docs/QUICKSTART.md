@@ -87,33 +87,16 @@ cd ..
 
 ## Step 3: Configure Environment Variables
 
-### Root Directory Configuration (For Docker Compose)
-
-If you're using Docker Compose (Options A or C in Step 5), create a `.env` file in the project root:
+### 1. Backend Configuration
+Create and edit `backend/.env`:
 
 ```bash
-# Copy the example file
-cp .env.docker.example .env
+# Copy example file
+cd backend
+cp .env.example .env
 ```
 
-Edit the root `.env` file:
-
-```env
-GOOGLE_CLIENT_ID=YOUR_CLIENT_ID_HERE.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=  # Optional - not needed for ID Token flow
-SECRET_KEY=your-secret-key-here
-```
-
-> **Note:** The `GOOGLE_CLIENT_SECRET` is optional for the ID Token flow used in this application. The backend verifies Google tokens using Google's public keys, so only the Client ID is required.
-
-To generate a secure SECRET_KEY:
-```bash
-openssl rand -hex 32
-```
-
-### Backend Configuration (Optional - Only Needed For Local Development)
-
-If you're running the backend locally (Option B in Step 5), edit `backend/.env`:
+Edit `backend/.env` to add your Google Client ID:
 
 ```env
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/google_auth_db
@@ -122,14 +105,30 @@ GOOGLE_CLIENT_SECRET=  # Optional - not needed for ID Token flow
 SECRET_KEY=your-secret-key-here
 ```
 
-### Frontend Configuration (Optional - Only Needed For Local Development)
+### 2. Frontend Configuration
+Create and edit `frontend/.env`:
 
-If you're running the frontend locally (Option B in Step 5), edit `frontend/.env`:
+```bash
+# Copy example file
+cd ../frontend
+cp .env.example .env
+```
+
+Edit `frontend/.env` to add your Google Client ID:
 
 ```env
 VITE_GOOGLE_CLIENT_ID=YOUR_CLIENT_ID_HERE.apps.googleusercontent.com
 VITE_API_BASE_URL=http://localhost:8000
 ```
+
+> **Important:** The `GOOGLE_CLIENT_ID` in the backend and `VITE_GOOGLE_CLIENT_ID` in the frontend must match exactly.
+
+### Generate a Secure Secret Key
+To generate a secure `SECRET_KEY` for the backend:
+```bash
+openssl rand -hex 32
+```
+
 
 ## Step 4: Run Database Migrations
 
@@ -141,14 +140,10 @@ cd ..
 
 ## Step 5: Start the Application
 
-Choose one of these options:
-
-### Option A: Docker Development (Recommended)
-
 Start everything with Docker and hot-reload:
 
 ```bash
-make docker-dev-up
+make docker-up
 ```
 
 **Access:**
@@ -158,7 +153,7 @@ make docker-dev-up
 
 **Stop services:**
 ```bash
-make docker-dev-down
+make docker-down
 ```
 
 ### Option B: Local Development
@@ -178,16 +173,6 @@ cd frontend
 npm run dev
 ```
 
-### Option C: Docker Production Mode
-
-For production-like Docker setup:
-
-```bash
-make docker-up-build
-```
-
-Access at http://localhost
-
 ## Step 6: Test the Application
 
 1. Open http://localhost:5173 in your browser
@@ -198,19 +183,17 @@ Access at http://localhost
 
 ## Development Commands
 
-For all available commands, see [MAKEFILE.md](MAKEFILE.md).
-
 Common commands:
-- `make docker-dev-up` - Start with hot-reload
-- `make docker-dev-logs` - View logs
-- `make docker-dev-down` - Stop services
+- `make docker-up` - Start with hot-reload
+- `make docker-logs` - View logs
+- `make docker-down` - Stop services
 - `make dev-backend` - Start backend only
 - `make dev-frontend` - Start frontend only
 - `pytest tests/ -v` - Run tests
 
 ## Hot-Reload
 
-Changes in `frontend/src/` and `backend/app/` are automatically reflected when using `make docker-dev-up` or local development servers.
+Changes in `frontend/src/` and `backend/app/` are automatically reflected when using `make docker-up` or local development servers.
 
 ## Troubleshooting
 
@@ -230,9 +213,9 @@ docker-compose restart
 ```
 
 ### Changes not reflecting in Docker?
-- Ensure you're using `make docker-dev-up` (not `docker-compose up`)
-- Check logs: `make docker-dev-logs`
-- Restart services: `make docker-dev-down && make docker-dev-up`
+- Ensure you're using `make docker-up`
+- Check logs: `make docker-logs`
+- Restart services: `make docker-down && make docker-up`
 
 ### GOOGLE_CLIENT_ID not set?
 - Verify `frontend/.env` exists and has `VITE_GOOGLE_CLIENT_ID` set
