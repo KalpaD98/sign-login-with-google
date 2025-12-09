@@ -43,10 +43,19 @@ You need a Google API Client ID to use Google services:
 4. Navigate to **APIs & Services** > **Credentials**
 5. Click **+ Create Credentials** > **OAuth client ID**
 6. Select **Web application** as the Application type
-7. In **Authorized JavaScript origins**, add your React app's URL:
-   - `http://localhost:5173` (for development)
-   - Your production URL (when deploying)
-8. Click **Create** and copy your **Client ID**
+7. Configure **Authorized JavaScript origins** (for use with requests from a browser):
+   - Click **+ Add URI** and add the following URIs:
+     - `http://localhost:5173`
+     - `http://127.0.0.1:5173`
+     - `http://localhost`
+   - Add your production URL when deploying (e.g., `https://yourdomain.com`)
+8. Configure **Authorized redirect URIs** (for use with requests from a web server):
+   - Click **+ Add URI** and add the following URIs:
+     - `http://localhost:5173`
+     - `http://127.0.0.1:5173`
+     - `http://localhost`
+   - Add your production redirect URL when deploying (e.g., `https://yourdomain.com`)
+9. Click **Create** and copy your **Client ID**
    
    > **Note:** You generally won't need the Client Secret for this token-based flow, as the token is verified using Google's public keys on the backend.
 
