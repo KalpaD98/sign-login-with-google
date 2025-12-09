@@ -90,9 +90,9 @@ The Docker setup includes several security best practices:
 
 | Service | Container Name | Port | Description |
 |---------|---------------|------|-------------|
-| `postgres` | google_auth_postgres | 5432 | PostgreSQL 16 database |
-| `backend` | google_auth_backend | 8000 | FastAPI backend server |
-| `frontend` | google_auth_frontend | 80 | React frontend (nginx) |
+| `postgres` | postgres | 5432 | PostgreSQL 16 database |
+| `backend` | backend | 8000 | FastAPI backend server |
+| `frontend` | frontend | 80 | React frontend (nginx) |
 
 ### Service Dependencies
 
@@ -347,7 +347,7 @@ docker-compose exec backend python -c "from app.core.database import engine; eng
 docker stats
 
 # View specific container
-docker stats google_auth_backend
+docker stats backend
 ```
 
 ## Security Considerations

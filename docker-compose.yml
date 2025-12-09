@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: google_auth_postgres
+    container_name: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -24,7 +22,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: google_auth_backend
+    container_name: backend
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/google_auth_db
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
@@ -44,7 +42,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: google_auth_frontend
+    container_name: frontend
     ports:
       - "80:80"
     depends_on:
