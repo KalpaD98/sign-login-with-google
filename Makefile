@@ -97,30 +97,9 @@ docker-build: ## Build Docker images
 	@$(DOCKER_COMPOSE) build
 	@echo "$(GREEN)✓ Docker images built$(NC)"
 
-docker-up: ## Start all services with Docker Compose
-	@echo "$(BLUE)Starting Docker services...$(NC)"
-	@$(DOCKER_COMPOSE) up -d
-	@echo ""
-	@echo "$(GREEN)✓ Services started$(NC)"
-	@echo "Frontend: http://localhost"
-	@echo "Backend API: http://localhost:8000"
-	@echo "API Docs: http://localhost:8000/docs"
-	@echo ""
-	@echo "View logs: make docker-logs"
-	@echo "Stop services: make docker-down"
-
-docker-up-build: ## Build and start all services with Docker Compose
-	@echo "$(BLUE)Building and starting Docker services...$(NC)"
+docker-up: ## Start all services with Docker Compose (Development)
+	@echo "$(BLUE)Starting Docker services (Development)...$(NC)"
 	@$(DOCKER_COMPOSE) up -d --build
-	@echo ""
-	@echo "$(GREEN)✓ Services started$(NC)"
-	@echo "Frontend: http://localhost"
-	@echo "Backend API: http://localhost:8000"
-	@echo "API Docs: http://localhost:8000/docs"
-
-docker-dev-up: ## Start development services with hot-reload (uses docker-compose.dev.yml)
-	@echo "$(BLUE)Starting development services with hot-reload...$(NC)"
-	@$(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 	@echo ""
 	@echo "$(GREEN)✓ Development services started$(NC)"
 	@echo "Frontend (Vite dev): http://localhost:5173"
@@ -128,17 +107,8 @@ docker-dev-up: ## Start development services with hot-reload (uses docker-compos
 	@echo "API Docs: http://localhost:8000/docs"
 	@echo ""
 	@echo "$(YELLOW)Note: Source code changes will be automatically reflected$(NC)"
-	@echo "View logs: make docker-dev-logs"
-
-docker-dev-down: ## Stop development services
-	@echo "$(BLUE)Stopping development services...$(NC)"
-	@$(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.dev.yml down
-	@echo "$(GREEN)✓ Development services stopped$(NC)"
-
-docker-dev-logs: ## View development services logs
-	@$(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.dev.yml logs -f
-
-docker-dev-restart: docker-dev-down docker-dev-up ## Restart development services
+	@echo "View logs: make docker-logs"
+	@echo "Stop services: make docker-down"
 
 docker-down: ## Stop all Docker services
 	@echo "$(BLUE)Stopping Docker services...$(NC)"
