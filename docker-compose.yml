@@ -1,4 +1,5 @@
 services:
+
   postgres:
     image: postgres:16-alpine
     container_name: postgres
@@ -21,35 +22,63 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: backend
+    volumes:
+      # Mount source code for hot-reload (uvicorn --reload watches Python files)
+      - ./backend/app:/app/app
+      - ./backend/tests:/app/tests
+      # Mount alembic for migrations
+      - ./backend/alembic:/app/alembic
+      - ./backend/alembic.ini:/app/alembic.ini
+      # Mount .env file if it exists
+      - ./backend/.env:/app/.env:ro
     environment:
+      # Override CORS to include localhost:5173 for Vite dev server
+      - CORS_ORIGINS=["http://localhost:3000","http://localhost:5173","http://localhost","http://localhost:80"]
+      # Override DATABASE_URL to use the postgres container hostname instead of localhost
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/google_auth_db
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - SECRET_KEY=${SECRET_KEY:-CHANGE_ME_OR_APP_WILL_FAIL}
-      - CORS_ORIGINS=http://localhost:3000,http://localhost:5173,http://localhost
+    env_file:
+      - ./backend/.env
     ports:
+      # Expose backend port for frontend to access
       - "8000:8000"
     depends_on:
       postgres:
         condition: service_healthy
     networks:
       - app-network
-    restart: unless-stopped
+    # Remove restart policy for development (easier to stop/start)
+    restart: "no"
 
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: frontend
+    volumes:
+      # Mount source code for hot-reload (read-write for Vite HMR)
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/index.html:/app/index.html
+      - ./frontend/vite.config.js:/app/vite.config.js
+      - ./frontend/package.json:/app/package.json
+      - ./frontend/package-lock.json:/app/package-lock.json
+      # Mount .env file if it exists
+      - ./frontend/.env:/app/.env:ro
+      # Exclude node_modules from mount (use container's node_modules)
+      - /app/node_modules
+    env_file:
+      - ./frontend/.env
     ports:
-      - "80:80"
+      # Map to 5173 instead of 80 for Vite dev server
+      - "5173:5173"
     depends_on:
       - backend
     networks:
       - app-network
-    restart: unless-stopped
+    # Remove restart policy for development
+    restart: "no"
 
 volumes:
   postgres_data:
