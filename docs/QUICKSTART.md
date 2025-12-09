@@ -2,6 +2,16 @@
 
 Get up and running in under 5 minutes!
 
+## Overview
+
+This application uses the **Google ID Token flow** for authentication, which is the most common and secure approach for React, FastAPI, and PostgreSQL stacks. Here's how it works:
+
+1. **Frontend (React)**: User clicks "Sign in with Google" → Google returns an ID token
+2. **Backend (FastAPI)**: Receives the token → Verifies it using Google's public keys → Creates/updates user in PostgreSQL
+3. **Database (PostgreSQL)**: Stores user information securely
+
+The ID Token flow is secure because tokens are cryptographically signed by Google and verified on the backend without needing a Client Secret.
+
 ## Prerequisites
 
 - Node.js 18+ and npm installed
@@ -9,25 +19,36 @@ Get up and running in under 5 minutes!
 - Docker and Docker Compose installed
 - Google OAuth credentials ([Get them here](https://console.cloud.google.com/))
 
-## Step 1: Get Google OAuth Credentials
+## Step 1: Configure Google OAuth Credentials
 
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project (or select existing)
-3. Enable Google+ API:
-   - Navigate to "APIs & Services" > "Library"
-   - Search for "Google+ API"
-   - Click "Enable"
-4. Create OAuth 2.0 credentials:
-   - Go to "APIs & Services" > "Credentials"
-   - Click "Create Credentials" > "OAuth 2.0 Client ID"
-   - Choose "Web application"
-   - Add Authorized JavaScript origins:
-     - `http://localhost:3000`
-     - `http://localhost:5173`
-   - Add Authorized redirect URIs:
-     - `http://localhost:3000/auth/google/callback`
-   - Click "Create"
-   - **Save your Client ID and Client Secret**
+To integrate Sign In with Google into your React, FastAPI, and PostgreSQL stack, the most common and secure approach is using the **ID Token flow**. 
+
+The overall process involves:
+- Setting up credentials on Google Cloud
+- Implementing the sign-in button in React to receive a token
+- Sending that token to your FastAPI backend
+- Verifying it on the backend
+- Managing the user in your PostgreSQL database
+
+### Get Your Google API Client ID
+
+You need a Google API Client ID to use Google services:
+
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select an existing one
+3. Navigate to **APIs & Services** > **OAuth consent screen** and configure the required app information:
+   - App name
+   - Support email
+   - Other required fields
+4. Navigate to **APIs & Services** > **Credentials**
+5. Click **+ Create Credentials** > **OAuth client ID**
+6. Select **Web application** as the Application type
+7. In **Authorized JavaScript origins**, add your React app's URL:
+   - `http://localhost:5173` (for development)
+   - Your production URL (when deploying)
+8. Click **Create** and copy your **Client ID**
+   
+   > **Note:** You generally won't need the Client Secret for this token-based flow, as the token is verified using Google's public keys on the backend.
 
 ## Step 2: Clone and Setup
 
@@ -66,25 +87,44 @@ cd ..
 
 ## Step 3: Configure Environment Variables
 
-### Backend Configuration
+### Root Directory Configuration (For Docker Compose)
 
-Edit `backend/.env`:
+If you're using Docker Compose (Options A or C in Step 5), create a `.env` file in the project root:
+
+```bash
+# Copy the example file
+cp .env.docker.example .env
+```
+
+Edit the root `.env` file:
 
 ```env
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/google_auth_db
 GOOGLE_CLIENT_ID=YOUR_CLIENT_ID_HERE.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=YOUR_CLIENT_SECRET_HERE
+GOOGLE_CLIENT_SECRET=  # Optional - not needed for ID Token flow
 SECRET_KEY=your-secret-key-here
 ```
+
+> **Note:** The `GOOGLE_CLIENT_SECRET` is optional for the ID Token flow used in this application. The backend verifies Google tokens using Google's public keys, so only the Client ID is required.
 
 To generate a secure SECRET_KEY:
 ```bash
 openssl rand -hex 32
 ```
 
-### Frontend Configuration
+### Backend Configuration (Optional - Only Needed For Local Development)
 
-Edit `frontend/.env`:
+If you're running the backend locally (Option B in Step 5), edit `backend/.env`:
+
+```env
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/google_auth_db
+GOOGLE_CLIENT_ID=YOUR_CLIENT_ID_HERE.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=  # Optional - not needed for ID Token flow
+SECRET_KEY=your-secret-key-here
+```
+
+### Frontend Configuration (Optional - Only Needed For Local Development)
+
+If you're running the frontend locally (Option B in Step 5), edit `frontend/.env`:
 
 ```env
 VITE_GOOGLE_CLIENT_ID=YOUR_CLIENT_ID_HERE.apps.googleusercontent.com
@@ -200,8 +240,9 @@ docker-compose restart
 
 ### Invalid token on Google Sign-In?
 - Verify Client ID matches in both Google Console and `.env` files
-- Check that authorized origins are correctly configured in Google Console
-- Ensure API is enabled: Google+ API in Google Cloud Console
+- Check that authorized JavaScript origins are correctly configured in Google Console
+- Ensure the OAuth consent screen is properly configured
+- Verify the token is being sent correctly from the frontend
 
 ## Next Steps
 
