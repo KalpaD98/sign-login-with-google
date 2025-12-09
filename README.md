@@ -18,6 +18,12 @@ A modern full-stack application featuring Google OAuth authentication with React
 - Docker and Docker Compose (for PostgreSQL)
 - Google Cloud Console account (for OAuth credentials)
 
+## 🚀 Quick Start
+
+For a quick setup guide, see [QUICKSTART.md](QUICKSTART.md)
+
+For detailed architecture information, see [ARCHITECTURE.md](ARCHITECTURE.md)
+
 ## 🔧 Setup Instructions
 
 ### 1. Google OAuth Configuration
