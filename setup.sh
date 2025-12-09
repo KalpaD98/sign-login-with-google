@@ -6,7 +6,7 @@ echo "Setting up Sign-in with Google Project"
 echo "========================================="
 echo ""
 echo "Note: This script is for Unix-like systems (Linux, macOS)."
-echo "For Windows, see QUICKSTART.md for manual setup instructions."
+echo "For Windows, see docs/QUICKSTART.md for manual setup instructions."
 echo ""
 
 # Backend setup

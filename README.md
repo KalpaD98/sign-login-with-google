@@ -59,13 +59,13 @@ docker-compose up --build
 
 Access the application at http://localhost
 
-👉 **See [DOCKER.md](DOCKER.md) for complete Docker deployment guide**
+👉 **See [DOCKER.md](docs/DOCKER.md) for complete Docker deployment guide**
 
 ### Option 3: Manual Setup
 
-For manual setup instructions, see [QUICKSTART.md](QUICKSTART.md)
+For manual setup instructions, see [QUICKSTART.md](docs/QUICKSTART.md)
 
-For detailed architecture information, see [ARCHITECTURE.md](ARCHITECTURE.md)
+For detailed architecture information, see [ARCHITECTURE.md](docs/ARCHITECTURE.md)
 
 ## 🔧 Setup Instructions
 
@@ -291,6 +291,8 @@ npm run preview
 
 ## 🤝 Contributing
 
+See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for contribution guidelines.
+
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
@@ -304,6 +306,18 @@ This project is licensed under the MIT License.
 ## 👥 Authors
 
 - KalpaD98
+
+## 📚 Documentation
+
+Additional documentation is available in the [`docs/`](docs/) directory:
+
+- **[QUICKSTART.md](docs/QUICKSTART.md)** - Quick start guide for setting up the project
+- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - Detailed architecture and design documentation
+- **[DOCKER.md](docs/DOCKER.md)** - Complete Docker deployment guide
+- **[MAKEFILE.md](docs/MAKEFILE.md)** - Makefile commands reference
+- **[CONTRIBUTING.md](docs/CONTRIBUTING.md)** - Contribution guidelines
+- **[PROJECT_SUMMARY.md](docs/PROJECT_SUMMARY.md)** - Project overview and summary
+- **[SCREENSHOTS.md](docs/SCREENSHOTS.md)** - Application screenshots
 
 ## 🙏 Acknowledgments
 
