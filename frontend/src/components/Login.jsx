@@ -1,9 +1,9 @@
 import { GoogleLogin } from '@react-oauth/google';
-import { Card, message } from 'antd';
+import { Card, message, Alert } from 'antd';
 import PropTypes from 'prop-types';
 import { authenticateWithGoogle } from '../services/authService';
 
-const Login = ({ onLoginSuccess }) => {
+const Login = ({ onLoginSuccess, hasConfigError }) => {
   const handleSuccess = async (credentialResponse) => {
     try {
       message.loading({ content: 'Authenticating...', key: 'auth' });
@@ -53,16 +53,26 @@ const Login = ({ onLoginSuccess }) => {
           </p>
         </div>
         
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <GoogleLogin
-            onSuccess={handleSuccess}
-            onError={handleError}
-            useOneTap
-            theme="filled_blue"
-            size="large"
-            text="signin_with"
+        {hasConfigError ? (
+          <Alert
+            message="Google Sign-In Unavailable"
+            description="Please configure VITE_GOOGLE_CLIENT_ID in your .env file to enable Google Sign-In."
+            type="warning"
+            showIcon
+            style={{ marginTop: '16px' }}
           />
-        </div>
+        ) : (
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <GoogleLogin
+              onSuccess={handleSuccess}
+              onError={handleError}
+              useOneTap
+              theme="filled_blue"
+              size="large"
+              text="signin_with"
+            />
+          </div>
+        )}
       </Card>
     </div>
   );
@@ -70,6 +80,11 @@ const Login = ({ onLoginSuccess }) => {
 
 Login.propTypes = {
   onLoginSuccess: PropTypes.func.isRequired,
+  hasConfigError: PropTypes.bool,
+};
+
+Login.defaultProps = {
+  hasConfigError: false,
 };
 
 export default Login;

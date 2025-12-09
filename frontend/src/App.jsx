@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { message } from 'antd';
+import { message, Alert } from 'antd';
 import Login from './components/Login';
 import UserProfile from './components/UserProfile';
 import { getStoredUser } from './services/authService';
@@ -40,33 +40,43 @@ function App() {
   };
 
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  const hasConfigError = !googleClientId;
 
-  if (!googleClientId) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        textAlign: 'center',
-        padding: '20px'
-      }}>
-        <div>
-          <h2>Configuration Error</h2>
-          <p>Please set VITE_GOOGLE_CLIENT_ID in your .env file</p>
-        </div>
-      </div>
-    );
-  }
+  const appContent = user ? (
+    <UserProfile user={user} onLogout={handleLogout} />
+  ) : (
+    <Login onLoginSuccess={handleLoginSuccess} hasConfigError={hasConfigError} />
+  );
 
   return (
-    <GoogleOAuthProvider clientId={googleClientId}>
-      {user ? (
-        <UserProfile user={user} onLogout={handleLogout} />
-      ) : (
-        <Login onLoginSuccess={handleLoginSuccess} />
+    <>
+      {hasConfigError && (
+        <Alert
+          message="Configuration Error"
+          description="Please set VITE_GOOGLE_CLIENT_ID in your .env file"
+          type="error"
+          showIcon
+          closable
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 1000,
+            borderRadius: 0
+          }}
+        />
       )}
-    </GoogleOAuthProvider>
+      {googleClientId ? (
+        <GoogleOAuthProvider clientId={googleClientId}>
+          {appContent}
+        </GoogleOAuthProvider>
+      ) : (
+        <div style={{ paddingTop: hasConfigError ? '48px' : '0' }}>
+          {appContent}
+        </div>
+      )}
+    </>
   );
 }
 
