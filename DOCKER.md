@@ -31,6 +31,8 @@ Generate a secure SECRET_KEY:
 openssl rand -hex 32
 ```
 
+**Important**: Do not use the default SECRET_KEY value. The application will use `CHANGE_ME_OR_APP_WILL_FAIL` by default, which is intentionally insecure to prevent accidental production use.
+
 ### 2. Configure Google OAuth
 
 In [Google Cloud Console](https://console.cloud.google.com/):
@@ -58,6 +60,18 @@ docker-compose up -d --build
 - **Frontend**: http://localhost
 - **Backend API**: http://localhost:8000
 - **API Documentation**: http://localhost:8000/docs
+
+## Security Features
+
+The Docker setup includes several security best practices:
+
+- ✅ **Non-root users**: Both backend and frontend containers run as non-root users
+- ✅ **Secure SECRET_KEY**: Default value clearly indicates it must be changed
+- ✅ **CORS configuration**: Properly configured for allowed origins
+- ✅ **Security headers**: Nginx includes X-Frame-Options, X-Content-Type-Options, X-XSS-Protection
+- ✅ **Health checks**: PostgreSQL has health checks to ensure database is ready
+- ✅ **Network isolation**: Services communicate via dedicated Docker network
+- ✅ **.dockerignore**: Prevents sensitive files from being included in images
 
 ## Docker Compose Services
 
@@ -339,7 +353,7 @@ docker stats google_auth_backend
 - [ ] Enable PostgreSQL SSL
 - [ ] Implement rate limiting
 - [ ] Add monitoring and logging
-- [ ] Use non-root users in Dockerfiles
+- [x] Use non-root users in Dockerfiles (implemented)
 - [ ] Scan images for vulnerabilities
 - [ ] Keep base images updated
 

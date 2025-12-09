@@ -29,8 +29,8 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/google_auth_db
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - SECRET_KEY=${SECRET_KEY:-your-secret-key-change-this-in-production-INSECURE}
-      - CORS_ORIGINS=["http://localhost:3000", "http://localhost:5173", "http://localhost"]
+      - SECRET_KEY=${SECRET_KEY:-CHANGE_ME_OR_APP_WILL_FAIL}
+      - CORS_ORIGINS=["http://localhost:3000","http://localhost:5173","http://localhost"]
     ports:
       - "8000:8000"
     depends_on:
