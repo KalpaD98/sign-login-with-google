@@ -241,8 +241,10 @@ check-deps: ## Check if required dependencies are installed
 	@echo "$(GREEN)✓ npm found: $$(npm --version)$(NC)"
 	@command -v docker >/dev/null 2>&1 || { echo "$(RED)✗ Docker not found$(NC)"; exit 1; }
 	@echo "$(GREEN)✓ Docker found: $$(docker --version)$(NC)"
-	@if command -v docker-compose >/dev/null 2>&1 || docker compose version >/dev/null 2>&1; then \
-		echo "$(GREEN)✓ Docker Compose found: $$($(DOCKER_COMPOSE) version)$(NC)"; \
+	@if command -v docker-compose >/dev/null 2>&1; then \
+		echo "$(GREEN)✓ Docker Compose found: $$(docker-compose version)$(NC)"; \
+	elif docker compose version >/dev/null 2>&1; then \
+		echo "$(GREEN)✓ Docker Compose found: $$(docker compose version)$(NC)"; \
 	else \
 		echo "$(RED)✗ Docker Compose not found$(NC)"; \
 		exit 1; \
