@@ -36,26 +36,29 @@ You need a Google API Client ID to use Google services:
 
 1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
 2. Create a new project or select an existing one
-3. Navigate to **APIs & Services** > **OAuth consent screen** and configure the required app information:
-   - App name
-   - Support email
-   - Other required fields
+3. Navigate to **APIs & Services** > **OAuth consent screen** and configure:
+   - **User Type:** Select "External" (unless you have a Google Workspace account)
+   - **App name:** Enter your application name
+   - **Support email:** Select your email from the dropdown
+   - **Developer contact information:** Enter your email address
+   - Click **Save and Continue** through the remaining screens (Scopes, Test users, Summary)
 4. Navigate to **APIs & Services** > **Credentials**
 5. Click **+ Create Credentials** > **OAuth client ID**
 6. Select **Web application** as the Application type
-7. Configure **Authorized JavaScript origins** (for use with requests from a browser):
-   - Click **+ Add URI** and add the following URIs:
+7. Configure **Authorized JavaScript origins** (required for browser-based OAuth requests):
+   - Click **+ Add URI** and add the following URIs (add all three to cover different localhost variations):
+     - `http://localhost:5173` (primary development URL)
+     - `http://127.0.0.1:5173` (alternative localhost format)
+     - `http://localhost` (fallback for port variations)
+   - **For production:** Add your production URL (e.g., `https://yourdomain.com`)
+8. Configure **Authorized redirect URIs** (required for OAuth redirect callbacks):
+   - Click **+ Add URI** and add the same URIs as above:
      - `http://localhost:5173`
      - `http://127.0.0.1:5173`
      - `http://localhost`
-   - Add your production URL when deploying (e.g., `https://yourdomain.com`)
-8. Configure **Authorized redirect URIs** (for use with requests from a web server):
-   - Click **+ Add URI** and add the following URIs:
-     - `http://localhost:5173`
-     - `http://127.0.0.1:5173`
-     - `http://localhost`
-   - Add your production redirect URL when deploying (e.g., `https://yourdomain.com`)
-9. Click **Create** and copy your **Client ID**
+   - **For production:** Add your production redirect URL (e.g., `https://yourdomain.com`)
+   - **Note:** Both sections require the same URIs because the OAuth flow uses JavaScript origins for initial requests and redirect URIs for callbacks
+9. Click **Create** and copy your **Client ID** (it will look like `xxxxx.apps.googleusercontent.com`)
    
    > **Note:** You generally won't need the Client Secret for this token-based flow, as the token is verified using Google's public keys on the backend.
 
@@ -64,8 +67,8 @@ You need a Google API Client ID to use Google services:
 ### Option A: Using Setup Script (Linux/macOS)
 
 ```bash
-# Clone repository
-git clone <repo-url>
+# Clone repository (replace with your actual repository URL)
+git clone https://github.com/your-username/sign-login-with-google.git
 cd sign-login-with-google
 
 # Run setup script
