@@ -30,3 +30,6 @@ Thumbs.db
 # Database
 *.db
 *.sqlite3
+
+# Database backups (created by make db-backup)
+backup_*.sql

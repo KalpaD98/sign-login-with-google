@@ -20,7 +20,30 @@ A modern full-stack application featuring Google OAuth authentication with React
 
 ## 🚀 Quick Start
 
-### Option 1: Docker Compose (Recommended)
+### Option 1: Using Make (Recommended)
+
+Automated setup using Makefile:
+
+```bash
+# Check dependencies
+make check-deps
+
+# Complete setup (install dependencies + create env files)
+make setup
+
+# Edit .env files with your Google OAuth credentials
+
+# Start development servers
+make dev-backend  # Terminal 1
+make dev-frontend # Terminal 2
+
+# Or use Docker
+make docker-up-build
+```
+
+Run `make help` to see all available commands.
+
+### Option 2: Docker Compose
 
 Run the entire application stack with a single command:
 
@@ -38,9 +61,9 @@ Access the application at http://localhost
 
 👉 **See [DOCKER.md](DOCKER.md) for complete Docker deployment guide**
 
-### Option 2: Local Development
+### Option 3: Manual Setup
 
-For local development setup, see [QUICKSTART.md](QUICKSTART.md)
+For manual setup instructions, see [QUICKSTART.md](QUICKSTART.md)
 
 For detailed architecture information, see [ARCHITECTURE.md](ARCHITECTURE.md)
 
