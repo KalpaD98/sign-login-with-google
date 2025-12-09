@@ -1,5 +1,6 @@
 import { Card, Avatar, Button, Descriptions, Space, Typography } from 'antd';
 import { UserOutlined, LogoutOutlined, MailOutlined } from '@ant-design/icons';
+import PropTypes from 'prop-types';
 import { logout } from '../services/authService';
 
 const { Title } = Typography;
@@ -94,6 +95,18 @@ const UserProfile = ({ user, onLogout }) => {
       </Card>
     </div>
   );
+};
+
+UserProfile.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    email: PropTypes.string.isRequired,
+    first_name: PropTypes.string,
+    last_name: PropTypes.string,
+    profile_picture: PropTypes.string,
+    created_at: PropTypes.string.isRequired,
+  }).isRequired,
+  onLogout: PropTypes.func.isRequired,
 };
 
 export default UserProfile;

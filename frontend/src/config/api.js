@@ -23,4 +23,30 @@ api.interceptors.request.use(
   }
 );
 
+// Handle token expiration and authentication errors
+api.interceptors.response.use(
+  (response) => {
+    // Pass through successful responses
+    return response;
+  },
+  (error) => {
+    // Check if error is due to authentication
+    if (error.response && error.response.status === 401) {
+      // Clear stored authentication data
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('user');
+      
+      // Dispatch custom event for components to listen to
+      window.dispatchEvent(new CustomEvent('auth:logout', { 
+        detail: { reason: 'token_expired' } 
+      }));
+      
+      // Optional: Redirect to login or reload page
+      // window.location.reload();
+    }
+    
+    return Promise.reject(error);
+  }
+);
+
 export default api;

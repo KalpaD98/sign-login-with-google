@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { message } from 'antd';
 import Login from './components/Login';
 import UserProfile from './components/UserProfile';
 import { getStoredUser } from './services/authService';
@@ -13,6 +14,21 @@ function App() {
     if (storedUser) {
       setUser(storedUser);
     }
+
+    // Listen for automatic logout events (e.g., token expiration)
+    const handleAuthLogout = (event) => {
+      setUser(null);
+      if (event.detail?.reason === 'token_expired') {
+        message.warning('Your session has expired. Please log in again.');
+      }
+    };
+
+    window.addEventListener('auth:logout', handleAuthLogout);
+
+    // Cleanup listener on unmount
+    return () => {
+      window.removeEventListener('auth:logout', handleAuthLogout);
+    };
   }, []);
 
   const handleLoginSuccess = (userData) => {

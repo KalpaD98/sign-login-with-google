@@ -1,5 +1,6 @@
 import { GoogleLogin } from '@react-oauth/google';
 import { Card, message } from 'antd';
+import PropTypes from 'prop-types';
 import { authenticateWithGoogle } from '../services/authService';
 
 const Login = ({ onLoginSuccess }) => {
@@ -59,12 +60,16 @@ const Login = ({ onLoginSuccess }) => {
             useOneTap
             theme="filled_blue"
             size="large"
-            text="continue_with"
+            text="signin_with"
           />
         </div>
       </Card>
     </div>
   );
+};
+
+Login.propTypes = {
+  onLoginSuccess: PropTypes.func.isRequired,
 };
 
 export default Login;
