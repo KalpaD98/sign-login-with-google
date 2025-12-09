@@ -1,233 +1,94 @@
 # Sign-in with Google - Full Stack Application
 
-A modern full-stack application featuring Google OAuth authentication with React 19, Ant Design 6.0.1, FastAPI, and PostgreSQL.
+A modern, production-ready full-stack application featuring Google OAuth authentication with React 19, Ant Design 6.0.1, FastAPI, and PostgreSQL.
 
-## 🚀 Features
+> **Quick Start**: See [QUICKSTART.md](docs/QUICKSTART.md) to get started in under 5 minutes!
+
+## Core Features
 
 - **Google OAuth Authentication**: Secure sign-in with Google
-- **User Profile Management**: Store and display user details (email, first name, last name, profile picture)
+- **User Profile Management**: Store and display user details
 - **Modern Frontend**: React 19 with Ant Design 6.0.1
-- **Fast Backend**: FastAPI with async support
-- **Database**: PostgreSQL for data persistence
-- **JWT Authentication**: Secure token-based authentication
+- **Fast Backend**: FastAPI with comprehensive error handling
+- **Database**: PostgreSQL with Alembic migrations
+- **JWT Authentication**: Token-based auth with expiration handling
+- **Production Ready**: Testing, logging, and security hardened
 
-## 📋 Prerequisites
+## Prerequisites
 
 - Node.js 18+ and npm
 - Python 3.9+
-- Docker and Docker Compose (for PostgreSQL)
+- Docker and Docker Compose
 - Google Cloud Console account (for OAuth credentials)
 
-## 🚀 Quick Start
+## Quick Start
 
-### Option 1: Using Make (Recommended)
+> **First time?** Follow [QUICKSTART.md](docs/QUICKSTART.md) for detailed setup instructions.
 
-Automated setup using Makefile:
+### Fast Setup (5 minutes)
 
 ```bash
-# Check dependencies
-make check-deps
+# 1. Clone and setup
+git clone <repo-url>
+cd sign-login-with-google
+./setup.sh  # or manual setup on Windows
 
-# Complete setup (install dependencies + create env files)
-make setup
+# 2. Configure environment files with Google OAuth credentials
+# Edit: backend/.env and frontend/.env
 
-# Edit .env files with your Google OAuth credentials
+# 3. Run migrations
+cd backend
+alembic upgrade head
+cd ..
 
-# Start development servers
-make dev-backend  # Terminal 1
-make dev-frontend # Terminal 2
+# 4. Start development
+make docker-dev-up
+```
 
-# Or use Docker
+**Access:**
+- Frontend: http://localhost:5173
+- Backend: http://localhost:8000
+- API Docs: http://localhost:8000/docs
+
+### Alternative Options
+
+**Docker Production Mode:**
+```bash
 make docker-up-build
 ```
 
-Run `make help` to see all available commands.
-
-### Option 2: Docker Compose
-
-Run the entire application stack with a single command:
-
+**Local Development:**
 ```bash
-# Copy environment template
-cp .env.docker.example .env
+# Terminal 1: Backend
+cd backend && source venv/bin/activate && uvicorn app.main:app --reload
 
-# Edit .env and add your Google OAuth credentials
-
-# Start all services
-docker-compose up --build
+# Terminal 2: Frontend
+cd frontend && npm run dev
 ```
 
-Access the application at http://localhost
+## Setup Instructions
 
-👉 **See [DOCKER.md](docs/DOCKER.md) for complete Docker deployment guide**
+For detailed setup instructions, see [QUICKSTART.md](docs/QUICKSTART.md).
 
-### Option 3: Manual Setup
-
-For manual setup instructions, see [QUICKSTART.md](docs/QUICKSTART.md)
-
-For detailed architecture information, see [ARCHITECTURE.md](docs/ARCHITECTURE.md)
-
-## 🔧 Setup Instructions
-
-### 1. Google OAuth Configuration
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing one
-3. Enable the Google+ API
-4. Go to "Credentials" and create OAuth 2.0 Client ID
-5. Add authorized JavaScript origins:
-   - `http://localhost:3000`
-   - `http://localhost:5173`
-6. Add authorized redirect URIs:
-   - `http://localhost:3000/auth/google/callback`
-7. Copy the Client ID and Client Secret
-
-### 2. Database Setup
-
-Start PostgreSQL using Docker Compose:
-
-```bash
-docker-compose up -d
-```
-
-This will start PostgreSQL on port 5432 with:
-- Database: `google_auth_db`
-- User: `postgres`
-- Password: `postgres`
-
-### 3. Backend Setup
-
-```bash
-# Navigate to backend directory
-cd backend
-
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Create .env file from example
-cp .env.example .env
-
-# Edit .env and add your Google OAuth credentials
-# GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
-# GOOGLE_CLIENT_SECRET=your-client-secret
-```
-
-Start the backend server:
-
-```bash
-# From the backend directory
-uvicorn app.main:app --reload --port 8000
-```
-
-The API will be available at `http://localhost:8000`
-- API Documentation: `http://localhost:8000/docs`
-
-### 4. Frontend Setup
-
-```bash
-# Navigate to frontend directory
-cd frontend
-
-# Install dependencies
-npm install
-
-# Create .env file from example
-cp .env.example .env
-
-# Edit .env and add your Google Client ID
-# VITE_GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
-```
-
-Start the development server:
-
-```bash
-npm run dev
-```
-
-The application will be available at `http://localhost:5173`
-
-## 🏗️ Project Structure
-
-```
-.
-├── backend/
-│   ├── app/
-│   │   ├── core/
-│   │   │   ├── config.py        # Configuration settings
-│   │   │   ├── database.py      # Database connection
-│   │   │   └── security.py      # JWT utilities
-│   │   ├── models/
-│   │   │   └── user.py          # User database model
-│   │   ├── routes/
-│   │   │   └── auth.py          # Authentication endpoints
-│   │   ├── schemas/
-│   │   │   └── user.py          # Pydantic schemas
-│   │   └── main.py              # FastAPI application
-│   ├── requirements.txt
-│   └── .env.example
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── Login.jsx        # Login page component
-│   │   │   └── UserProfile.jsx  # User profile component
-│   │   ├── config/
-│   │   │   └── api.js           # Axios configuration
-│   │   ├── services/
-│   │   │   └── authService.js   # Authentication service
-│   │   ├── App.jsx              # Main application
-│   │   └── main.jsx             # Entry point
-│   ├── package.json
-│   └── .env.example
-├── docker-compose.yml           # PostgreSQL setup
-└── README.md
-```
-
-## 🔌 API Endpoints
+## API Endpoints
 
 ### Authentication
 
 - `POST /auth/google` - Authenticate with Google OAuth token
-  - Request body: `{ "token": "google-oauth-token" }`
+  - Request: `{ "token": "google-oauth-token" }`
   - Response: `{ "access_token": "jwt-token", "token_type": "bearer", "user": {...} }`
 
-- `GET /auth/me?token=<jwt-token>` - Get current user information
-  - Response: User object with email, name, and profile picture
+- `GET /auth/me` - Get current user (requires Bearer token)
+  - Response: User object with profile data
 
-### Health Check
+### General
 
 - `GET /` - API information
-- `GET /health` - Health check endpoint
+- `GET /health` - Health check
+- `GET /docs` - Interactive API documentation
 
-## 🎨 Frontend Components
 
-### Login Component
-- Displays Google Sign-In button
-- Handles authentication flow
-- Shows loading and error messages
-
-### UserProfile Component
-- Displays user information
-- Shows profile picture
-- Includes logout functionality
-
-## 🔐 Security Features
-
-- JWT token-based authentication
-- Secure token verification with Google
-- CORS configuration
-- Environment variable protection
-- Password hashing support (if needed for future features)
-
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Frontend
 - **React 19.0.0**: Latest React version with modern features
@@ -244,7 +105,7 @@ The application will be available at `http://localhost:5173`
 - **Python-JOSE**: JWT token handling
 - **Pydantic**: Data validation using Python type annotations
 
-## 📝 Environment Variables
+## Environment Variables
 
 ### Backend (.env)
 ```
@@ -260,66 +121,30 @@ VITE_GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
 VITE_API_BASE_URL=http://localhost:8000
 ```
 
-## 🚦 Development
+## Development
 
-### Running Tests
-```bash
-# Backend tests (when implemented)
-cd backend
-pytest
+For development commands and testing, see [QUICKSTART.md](docs/QUICKSTART.md) and [MAKEFILE.md](docs/MAKEFILE.md).
 
-# Frontend tests (when implemented)
-cd frontend
-npm test
-```
-
-### Building for Production
-
-Backend:
-```bash
-cd backend
-pip install -r requirements.txt
-uvicorn app.main:app --host 0.0.0.0 --port 8000
-```
-
-Frontend:
-```bash
-cd frontend
-npm run build
-npm run preview
-```
-
-## 🤝 Contributing
+## Contributing
 
 See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for contribution guidelines.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📄 License
+## License
 
 This project is licensed under the MIT License.
 
-## 👥 Authors
+## Authors
 
 - KalpaD98
 
-## 📚 Documentation
+## Documentation
 
-Additional documentation is available in the [`docs/`](docs/) directory:
-
-- **[QUICKSTART.md](docs/QUICKSTART.md)** - Quick start guide for setting up the project
-- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - Detailed architecture and design documentation
-- **[DOCKER.md](docs/DOCKER.md)** - Complete Docker deployment guide
-- **[MAKEFILE.md](docs/MAKEFILE.md)** - Makefile commands reference
+- **[QUICKSTART.md](docs/QUICKSTART.md)** - Complete setup guide with troubleshooting
+- **[DOCKER.md](docs/DOCKER.md)** - Docker deployment guide
+- **[MAKEFILE.md](docs/MAKEFILE.md)** - All available Make commands
 - **[CONTRIBUTING.md](docs/CONTRIBUTING.md)** - Contribution guidelines
-- **[PROJECT_SUMMARY.md](docs/PROJECT_SUMMARY.md)** - Project overview and summary
-- **[SCREENSHOTS.md](docs/SCREENSHOTS.md)** - Application screenshots
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Google OAuth for authentication
 - React team for React 19

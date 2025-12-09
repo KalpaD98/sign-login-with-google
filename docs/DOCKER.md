@@ -6,7 +6,7 @@ This guide explains how to run the entire application stack using Docker Compose
 
 - Docker Engine 20.10+
 - Docker Compose 2.0+
-- Google OAuth credentials from [Google Cloud Console](https://console.cloud.google.com/)
+- Google OAuth credentials (see [QUICKSTART.md](QUICKSTART.md) Step 1)
 
 ## Quick Start
 
@@ -35,17 +35,12 @@ openssl rand -hex 32
 
 ### 2. Configure Google OAuth
 
-In [Google Cloud Console](https://console.cloud.google.com/):
-
-1. Add authorized JavaScript origins:
-   - `http://localhost`
-   - `http://localhost:80`
-
-2. Add authorized redirect URIs:
-   - `http://localhost/auth/google/callback`
+See [QUICKSTART.md](QUICKSTART.md) Step 1 for Google OAuth setup. For Docker, also add:
+- `http://localhost` and `http://localhost:80` as authorized JavaScript origins
 
 ### 3. Build and Start Services
 
+**Production Mode (default):**
 ```bash
 docker-compose up --build
 ```
@@ -55,9 +50,25 @@ Or run in detached mode:
 docker-compose up -d --build
 ```
 
+**Development Mode (with hot-reload):**
+```bash
+make docker-dev-up
+```
+
+Or manually:
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+```
+
 ### 4. Access the Application
 
+**Production Mode:**
 - **Frontend**: http://localhost
+- **Backend API**: http://localhost:8000
+- **API Documentation**: http://localhost:8000/docs
+
+**Development Mode:**
+- **Frontend**: http://localhost:5173 (Vite dev server)
 - **Backend API**: http://localhost:8000
 - **API Documentation**: http://localhost:8000/docs
 
@@ -65,13 +76,13 @@ docker-compose up -d --build
 
 The Docker setup includes several security best practices:
 
-- ✅ **Non-root users**: Both backend and frontend containers run as non-root users
-- ✅ **Secure SECRET_KEY**: Default value clearly indicates it must be changed
-- ✅ **CORS configuration**: Properly configured for allowed origins
-- ✅ **Security headers**: Nginx includes X-Frame-Options, X-Content-Type-Options, X-XSS-Protection
-- ✅ **Health checks**: PostgreSQL has health checks to ensure database is ready
-- ✅ **Network isolation**: Services communicate via dedicated Docker network
-- ✅ **.dockerignore**: Prevents sensitive files from being included in images
+- **Non-root users**: Both backend and frontend containers run as non-root users
+- **Secure SECRET_KEY**: Default value clearly indicates it must be changed
+- **CORS configuration**: Properly configured for allowed origins
+- **Security headers**: Nginx includes X-Frame-Options, X-Content-Type-Options, X-XSS-Protection
+- **Health checks**: PostgreSQL has health checks to ensure database is ready
+- **Network isolation**: Services communicate via dedicated Docker network
+- **.dockerignore**: Prevents sensitive files from being included in images
 
 ## Docker Compose Services
 
@@ -199,19 +210,44 @@ docker-compose up -d frontend
 
 ## Development vs Production
 
-### Development Mode
+### Development Mode with Docker (Hot-Reload)
 
-For development, use the local setup instead of Docker:
+For development with Docker, you can use the development configuration which includes hot-reload:
 
 ```bash
-# Backend (Terminal 1)
-cd backend
-source venv/bin/activate
-uvicorn app.main:app --reload
+# Start development services with hot-reload
+make docker-dev-up
 
-# Frontend (Terminal 2)
-cd frontend
-npm run dev
+# Or manually:
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+```
+
+**Features:**
+- **Hot-reload**: Source code changes are automatically reflected
+- **Frontend**: Vite dev server with HMR (Hot Module Replacement)
+- **Backend**: Uvicorn with auto-reload on Python file changes
+- **Volume mounts**: Source code is mounted into containers
+- **Ports**: Frontend on `5173`, Backend on `8000`
+
+**Access URLs:**
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:8000
+- API Docs: http://localhost:8000/docs
+
+**Stop development services:**
+```bash
+make docker-dev-down
+
+# Or manually:
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml down
+```
+
+**View logs:**
+```bash
+make docker-dev-logs
+
+# Or manually:
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml logs -f
 ```
 
 ### Production Mode
@@ -236,54 +272,26 @@ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 
 ## Troubleshooting
 
-### Issue: Backend can't connect to database
+### Common Docker Issues
 
-**Solution:**
-```bash
-# Check if postgres is healthy
-docker-compose ps
+**Backend can't connect to database:**
+- Check if postgres is healthy: `docker-compose ps`
+- View logs: `docker-compose logs postgres`
+- Restart: `docker-compose restart postgres`
 
-# View postgres logs
-docker-compose logs postgres
+**Port already in use:**
+- Find process: `lsof -i :8000` (backend) or `lsof -i :80` (frontend)
+- Stop the process or change ports in docker-compose.yml
 
-# Restart postgres
-docker-compose restart postgres
-```
+**Changes not reflected in development mode:**
+- Ensure using `make docker-dev-up` (not `docker-compose up`)
+- Check logs: `make docker-dev-logs`
+- Verify volumes are mounted correctly
 
-### Issue: Frontend shows "Network Error"
+**Build fails:**
+- Clean rebuild: `docker-compose down && docker-compose build --no-cache && docker-compose up`
 
-**Solution:**
-1. Check if backend is running: `curl http://localhost:8000/health`
-2. Verify CORS settings in backend
-3. Check backend logs: `docker-compose logs backend`
-
-### Issue: "Port already in use"
-
-**Solution:**
-```bash
-# Find process using the port
-lsof -i :8000  # Backend port
-lsof -i :80    # Frontend port
-lsof -i :5432  # Postgres port
-
-# Stop the process or change ports in docker-compose.yml
-```
-
-### Issue: Database data is lost after restart
-
-**Solution:**
-- Don't use `docker-compose down -v` (removes volumes)
-- Use `docker-compose stop` or `docker-compose down` (without -v)
-
-### Issue: Build fails
-
-**Solution:**
-```bash
-# Clean rebuild
-docker-compose down
-docker-compose build --no-cache
-docker-compose up
-```
+For more troubleshooting, see [QUICKSTART.md](QUICKSTART.md).
 
 ## Data Persistence
 
@@ -373,8 +381,4 @@ Never commit `.env` files with real credentials. Always use:
 
 ## Support
 
-For issues or questions:
-1. Check this guide first
-2. Review logs: `docker-compose logs`
-3. Check main README.md for application setup
-4. Open an issue on GitHub
+For issues, check logs: `docker-compose logs` or `make docker-logs`. See [QUICKSTART.md](QUICKSTART.md) for general troubleshooting.

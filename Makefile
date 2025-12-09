@@ -1,5 +1,6 @@
 .PHONY: help install install-backend install-frontend setup setup-env clean clean-backend clean-frontend \
         dev dev-backend dev-frontend docker-build docker-up docker-down docker-logs docker-clean \
+        docker-dev-up docker-dev-down docker-dev-logs docker-dev-restart \
         test test-backend lint lint-backend lint-frontend build build-frontend check-deps
 
 # Default target
@@ -116,6 +117,28 @@ docker-up-build: ## Build and start all services with Docker Compose
 	@echo "Frontend: http://localhost"
 	@echo "Backend API: http://localhost:8000"
 	@echo "API Docs: http://localhost:8000/docs"
+
+docker-dev-up: ## Start development services with hot-reload (uses docker-compose.dev.yml)
+	@echo "$(BLUE)Starting development services with hot-reload...$(NC)"
+	@$(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+	@echo ""
+	@echo "$(GREEN)✓ Development services started$(NC)"
+	@echo "Frontend (Vite dev): http://localhost:5173"
+	@echo "Backend API: http://localhost:8000"
+	@echo "API Docs: http://localhost:8000/docs"
+	@echo ""
+	@echo "$(YELLOW)Note: Source code changes will be automatically reflected$(NC)"
+	@echo "View logs: make docker-dev-logs"
+
+docker-dev-down: ## Stop development services
+	@echo "$(BLUE)Stopping development services...$(NC)"
+	@$(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.dev.yml down
+	@echo "$(GREEN)✓ Development services stopped$(NC)"
+
+docker-dev-logs: ## View development services logs
+	@$(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.dev.yml logs -f
+
+docker-dev-restart: docker-dev-down docker-dev-up ## Restart development services
 
 docker-down: ## Stop all Docker services
 	@echo "$(BLUE)Stopping Docker services...$(NC)"

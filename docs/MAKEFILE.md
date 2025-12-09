@@ -4,27 +4,19 @@ This document describes all available `make` commands for automating development
 
 ## Prerequisites
 
-The Makefile requires the following tools to be installed:
-- Python 3.9+
-- Node.js 18+
-- Docker and Docker Compose
-- Make (usually pre-installed on Unix systems)
-
-Run `make check-deps` to verify all dependencies are installed.
+- Python 3.9+, Node.js 18+, Docker and Docker Compose, Make
+- Run `make check-deps` to verify all dependencies are installed
 
 ## Quick Start
 
 ```bash
-# See all available commands
-make help
-
-# Complete project setup
-make setup
-
-# Start development
-make dev-backend  # Terminal 1
-make dev-frontend # Terminal 2
+make help          # See all available commands
+make setup         # Complete project setup
+make dev-backend   # Start backend (Terminal 1)
+make dev-frontend  # Start frontend (Terminal 2)
 ```
+
+For detailed setup instructions, see [QUICKSTART.md](QUICKSTART.md).
 
 ## Command Categories
 
@@ -47,16 +39,6 @@ make dev-frontend # Terminal 2
 | `make install-frontend` | Install frontend Node.js dependencies |
 | `make setup-env` | Create .env files from examples |
 
-**Example:**
-```bash
-# First-time setup
-make setup
-
-# Edit environment files
-vim backend/.env
-vim frontend/.env
-vim .env
-```
 
 ### Development
 
@@ -66,21 +48,12 @@ vim .env
 | `make dev-backend` | Start backend development server on port 8000 |
 | `make dev-frontend` | Start frontend development server on port 5173 |
 
-**Example:**
-```bash
-# Terminal 1
-make dev-backend
 
-# Terminal 2 (in another terminal)
-make dev-frontend
-```
-
-**Development URLs:**
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:8000
-- API Documentation: http://localhost:8000/docs
+**Development URLs:** Frontend: http://localhost:5173 | Backend: http://localhost:8000 | API Docs: http://localhost:8000/docs
 
 ### Docker
+
+#### Production Mode
 
 | Command | Description |
 |---------|-------------|
@@ -98,22 +71,22 @@ make dev-frontend
 | `make docker-ps` | List running Docker containers |
 | `make docker-clean` | Remove all Docker containers, volumes, and images |
 
-**Example:**
-```bash
-# Build and start with Docker
-make docker-up-build
 
-# View logs in real-time
-make docker-logs
+**Production URLs:** Frontend: http://localhost | Backend: http://localhost:8000 | API Docs: http://localhost:8000/docs
 
-# Stop services
-make docker-down
-```
+#### Development Mode (Hot-Reload)
 
-**Docker URLs:**
-- Frontend: http://localhost (port 80)
-- Backend API: http://localhost:8000
-- API Documentation: http://localhost:8000/docs
+| Command | Description |
+|---------|-------------|
+| `make docker-dev-up` | Start development services with hot-reload |
+| `make docker-dev-down` | Stop development services |
+| `make docker-dev-logs` | View development services logs |
+| `make docker-dev-restart` | Restart development services |
+
+
+**Development URLs:** Frontend: http://localhost:5173 | Backend: http://localhost:8000 | API Docs: http://localhost:8000/docs
+
+**Features:** Hot-reload enabled for both frontend (Vite HMR) and backend (Uvicorn auto-reload)
 
 ### Database
 
@@ -123,17 +96,6 @@ make docker-down
 | `make db-backup` | Backup database to timestamped SQL file |
 | `make db-restore FILE=backup.sql` | Restore database from backup file |
 
-**Example:**
-```bash
-# Access database shell
-make db-shell
-
-# Backup database
-make db-backup
-
-# Restore from backup
-make db-restore FILE=backup_20241209_120000.sql
-```
 
 ### Testing
 
@@ -142,14 +104,6 @@ make db-restore FILE=backup_20241209_120000.sql
 | `make test` | Run all tests |
 | `make test-backend` | Run backend tests with pytest |
 
-**Example:**
-```bash
-# Run all tests
-make test
-
-# Run only backend tests
-make test-backend
-```
 
 ### Linting & Code Quality
 
@@ -159,14 +113,6 @@ make test-backend
 | `make lint-backend` | Run Python linter (flake8) |
 | `make lint-frontend` | Run JavaScript linter (ESLint) |
 
-**Example:**
-```bash
-# Lint all code
-make lint
-
-# Lint only frontend
-make lint-frontend
-```
 
 ### Building
 
@@ -175,13 +121,6 @@ make lint-frontend
 | `make build` | Build all production assets |
 | `make build-frontend` | Build frontend for production |
 
-**Example:**
-```bash
-# Build frontend for production
-make build-frontend
-
-# Output will be in frontend/dist/
-```
 
 ### Cleaning
 
@@ -192,182 +131,82 @@ make build-frontend
 | `make clean-frontend` | Clean frontend artifacts (dist/, .vite/) |
 | `make clean-all` | Clean everything including venv and node_modules |
 
-**Example:**
-```bash
-# Clean build artifacts
-make clean
-
-# Clean everything (requires reinstall after)
-make clean-all
-```
 
 ## Common Workflows
 
 ### First-Time Setup
 
 ```bash
-# 1. Check prerequisites
-make check-deps
-
-# 2. Run setup
-make setup
-
-# 3. Configure environment variables
-vim backend/.env      # Add Google OAuth credentials
-vim frontend/.env     # Add Google Client ID
-vim .env             # For Docker deployment
-
-# 4. Start development
-make dev-backend     # Terminal 1
-make dev-frontend    # Terminal 2
+make check-deps      # Verify prerequisites
+make setup          # Install dependencies and create .env files
+# Edit .env files with your credentials
+make dev-backend    # Terminal 1
+make dev-frontend   # Terminal 2
 ```
+
+See [QUICKSTART.md](QUICKSTART.md) for detailed setup instructions.
 
 ### Daily Development
 
 ```bash
-# Start backend (Terminal 1)
-make dev-backend
-
-# Start frontend (Terminal 2)
-make dev-frontend
-
-# Run tests when needed
-make test
-
-# Lint code before committing
-make lint
+make dev-backend    # Terminal 1
+make dev-frontend   # Terminal 2
+make test           # Run tests
+make lint           # Lint code
 ```
 
 ### Docker Development
 
+**Development Mode (Recommended):**
 ```bash
-# Build and start everything
-make docker-up-build
+make docker-dev-up    # Start with hot-reload
+make docker-dev-logs  # View logs
+make docker-dev-down  # Stop
+```
 
-# View logs
-make docker-logs
-
-# Restart after code changes
-make docker-restart-backend
-
-# Stop everything
-make docker-down
+**Production Mode:**
+```bash
+make docker-up-build        # Build and start
+make docker-restart-backend # Restart backend
+make docker-down            # Stop
 ```
 
 ### Before Committing
 
 ```bash
-# Lint code
-make lint
-
-# Run tests
-make test
-
-# Clean artifacts
-make clean
+make lint   # Lint code
+make test   # Run tests
+make clean  # Clean artifacts
 ```
 
 ### Production Build
 
 ```bash
-# Build frontend
-make build-frontend
-
-# Build Docker images
-make docker-build
+make build-frontend  # Build frontend
+make docker-build    # Build Docker images
 ```
 
 ### Troubleshooting
 
 ```bash
-# Check status of everything
-make status
-
-# Clean and rebuild
-make clean
-make install
-make docker-build
-
-# View logs
-make docker-logs
-
-# Restart specific service
-make docker-restart-backend
+make status              # Check system state
+make clean && make install && make docker-build  # Clean rebuild
+make docker-logs         # View logs
+make docker-restart-backend  # Restart backend
 ```
 
 ## Environment Variables
 
-The Makefile uses the following environment files:
-
-| File | Purpose |
-|------|---------|
-| `backend/.env` | Backend configuration (local development) |
-| `frontend/.env` | Frontend configuration (local development) |
-| `.env` | Docker Compose configuration |
-
-Run `make setup-env` to create these files from examples.
+Run `make setup-env` to create `.env` files from examples. See [QUICKSTART.md](QUICKSTART.md) for configuration details.
 
 ## Tips and Tricks
 
-### Running Commands in Parallel
+### Tips
 
-```bash
-# Not recommended (hard to see output)
-make dev
-
-# Recommended: Use separate terminals
-make dev-backend  # Terminal 1
-make dev-frontend # Terminal 2
-```
-
-### Using tmux or screen
-
-```bash
-# With tmux
-tmux new-session -d -s backend 'make dev-backend'
-tmux new-session -d -s frontend 'make dev-frontend'
-tmux attach -t backend
-
-# Attach to either session with:
-tmux attach -t backend
-tmux attach -t frontend
-```
-
-### Viewing Multiple Logs
-
-```bash
-# All services
-make docker-logs
-
-# Specific service in new terminal
-make docker-logs-backend  # Terminal 1
-make docker-logs-frontend # Terminal 2
-```
-
-### Database Management
-
-```bash
-# Quick backup before major changes
-make db-backup
-
-# Backup creates: backup_YYYYMMDD_HHMMSS.sql
-
-# Restore if needed
-make db-restore FILE=backup_20241209_120000.sql
-```
-
-### Checking What's Running
-
-```bash
-# See all service status
-make status
-
-# See Docker containers
-make docker-ps
-
-# See project info
-make info
-```
+- Use separate terminals for `make dev-backend` and `make dev-frontend`
+- Use `make docker-dev-up` for hot-reload development
+- Run `make status` to check system state
+- Use `make db-backup` before major changes
 
 ## Makefile Customization
 
@@ -457,8 +296,4 @@ make install-frontend
 
 ## Support
 
-For issues or questions:
-1. Run `make status` to check system state
-2. Run `make check-deps` to verify dependencies
-3. Check the relevant documentation
-4. Open an issue on GitHub
+Run `make status` to check system state or `make check-deps` to verify dependencies. See [QUICKSTART.md](QUICKSTART.md) for troubleshooting.

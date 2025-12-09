@@ -44,29 +44,6 @@ Thank you for considering contributing to this project! This guide will help you
 
 See [QUICKSTART.md](QUICKSTART.md) for detailed setup instructions.
 
-### Prerequisites
-
-- Node.js 18+
-- Python 3.9+
-- Docker and Docker Compose
-- Git
-
-### Initial Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/KalpaD98/sign-login-with-google.git
-cd sign-login-with-google
-
-# Run setup script
-./setup.sh
-
-# Configure environment variables
-cp backend/.env.example backend/.env
-cp frontend/.env.example frontend/.env
-# Edit .env files with your credentials
-```
-
 ## Coding Standards
 
 ### Backend (Python)
@@ -142,32 +119,16 @@ Fixes #123
 
 ## Testing
 
-### Backend Tests
-
-```bash
-cd backend
-source venv/bin/activate
-pytest
-```
-
 Write tests for:
-- New endpoints
-- New database models
+- New endpoints and database models (backend)
+- New components and API services (frontend)
+- Authentication logic and flows
 - Utility functions
-- Authentication logic
 
-### Frontend Tests
-
+Run tests with:
 ```bash
-cd frontend
-npm test
+cd backend && pytest tests/ -v
 ```
-
-Write tests for:
-- New components
-- API service functions
-- Authentication flows
-- User interactions
 
 ### Manual Testing
 
@@ -251,7 +212,6 @@ Update documentation when:
 Files to update:
 - `README.md` - Main documentation
 - `QUICKSTART.md` - Quick start guide
-- `ARCHITECTURE.md` - Architecture details
 - API documentation strings
 - Code comments
 
@@ -277,11 +237,10 @@ Files to update:
 ## Release Process
 
 1. Update version in `package.json` and relevant files
-2. Update CHANGELOG.md
-3. Create release notes
-4. Tag release in git
-5. Build and test production build
-6. Deploy to staging first
+2. Create release notes
+3. Tag release in git
+4. Build and test production build
+5. Deploy to staging first
 7. Deploy to production after verification
 
 ## Getting Help
@@ -299,4 +258,4 @@ Contributors will be recognized in:
 - Release notes
 - Project documentation
 
-Thank you for contributing! 🎉
+Thank you for contributing!
