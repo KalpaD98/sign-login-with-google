@@ -1,5 +1,4 @@
-import { Button, Typography, Space, Card, Row, Col } from 'antd';
-import { GoogleOutlined, SafetyOutlined, ThunderboltOutlined, GlobalOutlined } from '@ant-design/icons';
+import { Button, Typography, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -54,7 +53,7 @@ const Welcome = ({ isAuthenticated }) => {
         padding: '40px 20px',
         textAlign: 'center'
       }}>
-        <Space direction="vertical" size="large" style={{ maxWidth: '800px' }}>
+        <Space orientation="vertical" size="large" style={{ maxWidth: '800px' }}>
           <Title 
             level={1} 
             style={{ 
@@ -106,54 +105,6 @@ const Welcome = ({ isAuthenticated }) => {
             Get Started
           </Button>
         </Space>
-      </div>
-
-      {/* Features Section */}
-      <div style={{
-        background: 'white',
-        padding: '80px 20px',
-      }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <Title 
-            level={2} 
-            style={{ 
-              textAlign: 'center', 
-              color: '#667eea',
-              marginBottom: '48px',
-              fontSize: '36px'
-            }}
-          >
-            Why Choose Us?
-          </Title>
-
-          <Row gutter={[32, 32]}>
-            {features.map((feature, index) => (
-              <Col xs={24} sm={12} lg={6} key={index}>
-                <Card
-                  hoverable
-                  style={{
-                    height: '100%',
-                    textAlign: 'center',
-                    borderRadius: '12px',
-                    border: '1px solid #f0f0f0',
-                    transition: 'all 0.3s ease'
-                  }}
-                  bodyStyle={{ padding: '32px' }}
-                >
-                  <div style={{ marginBottom: '16px' }}>
-                    {feature.icon}
-                  </div>
-                  <Title level={4} style={{ color: '#333', marginBottom: '12px' }}>
-                    {feature.title}
-                  </Title>
-                  <Paragraph style={{ color: '#666', margin: 0 }}>
-                    {feature.description}
-                  </Paragraph>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        </div>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { Layout, Menu, Button, Avatar, Dropdown, Space } from 'antd';
-import { HomeOutlined, UserOutlined, LogoutOutlined, LoginOutlined, WelcomeOutlined } from '@ant-design/icons';
+import { HomeOutlined, UserOutlined, LogoutOutlined, LoginOutlined, AppstoreOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { logout } from '../services/authService';
@@ -59,7 +59,7 @@ const Navbar = ({ user, onLogout }) => {
   ] : [
     {
       key: 'welcome',
-      icon: <WelcomeOutlined />,
+      icon: <AppstoreOutlined />,
       label: 'Welcome',
       onClick: () => navigate('/'),
     },
@@ -119,11 +119,26 @@ const Navbar = ({ user, onLogout }) => {
             arrow
           >
             <Space style={{ cursor: 'pointer' }}>
-              <Avatar 
-                src={user.profile_picture}
-                icon={!user.profile_picture && <UserOutlined />}
-                style={{ border: '2px solid white' }}
-              />
+              {user.profile_picture ? (
+                <img 
+                  src={user.profile_picture}
+                  referrerPolicy="no-referrer"
+                  alt="profile"
+                  style={{ 
+                    width: '32px', 
+                    height: '32px', 
+                    borderRadius: '50%', 
+                    objectFit: 'cover',
+                    border: '2px solid white',
+                    display: 'block'
+                  }}
+                />
+              ) : (
+                <Avatar 
+                  icon={<UserOutlined />}
+                  style={{ border: '2px solid white' }}
+                />
+              )}
               <span style={{ color: 'white', fontWeight: '500' }}>
                 {user.first_name || 'User'}
               </span>

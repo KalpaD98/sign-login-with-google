@@ -1,59 +1,9 @@
-import { Card, Typography, Space, Row, Col, Statistic, Button } from 'antd';
-import { UserOutlined, SafetyOutlined, ClockCircleOutlined, RocketOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { Card, Typography, Space } from 'antd';
 import PropTypes from 'prop-types';
 
 const { Title, Paragraph } = Typography;
 
 const Home = ({ user }) => {
-  const navigate = useNavigate();
-
-  const stats = [
-    {
-      title: 'Active Users',
-      value: 1234,
-      icon: <UserOutlined style={{ color: '#667eea' }} />,
-    },
-    {
-      title: 'Security Level',
-      value: 100,
-      suffix: '%',
-      icon: <SafetyOutlined style={{ color: '#52c41a' }} />,
-    },
-    {
-      title: 'Uptime',
-      value: 99.9,
-      suffix: '%',
-      icon: <ClockCircleOutlined style={{ color: '#1890ff' }} />,
-    },
-    {
-      title: 'Features',
-      value: 50,
-      prefix: '+',
-      icon: <RocketOutlined style={{ color: '#fa8c16' }} />,
-    },
-  ];
-
-  const quickActions = [
-    {
-      title: 'View Profile',
-      description: 'Check and update your profile information',
-      action: () => navigate('/profile'),
-      color: '#667eea'
-    },
-    {
-      title: 'Settings',
-      description: 'Manage your account preferences',
-      action: () => alert('Settings page coming soon!'),
-      color: '#52c41a'
-    },
-    {
-      title: 'Help Center',
-      description: 'Get support and find answers',
-      action: () => alert('Help center coming soon!'),
-      color: '#1890ff'
-    },
-  ];
 
   return (
     <div style={{ 
@@ -71,7 +21,7 @@ const Home = ({ user }) => {
             border: 'none'
           }}
         >
-          <Space direction="vertical" size="small">
+          <Space orientation="vertical" size="small">
             <Title 
               level={2} 
               style={{ 
@@ -88,69 +38,6 @@ const Home = ({ user }) => {
           </Space>
         </Card>
 
-        {/* Statistics */}
-        <Row gutter={[16, 16]} style={{ marginBottom: '32px' }}>
-          {stats.map((stat, index) => (
-            <Col xs={24} sm={12} lg={6} key={index}>
-              <Card 
-                hoverable
-                style={{ 
-                  borderRadius: '12px',
-                  height: '100%'
-                }}
-              >
-                <Statistic
-                  title={stat.title}
-                  value={stat.value}
-                  prefix={stat.prefix}
-                  suffix={stat.suffix}
-                  valueStyle={{ color: stat.icon.props.style.color }}
-                  prefix={stat.icon}
-                />
-              </Card>
-            </Col>
-          ))}
-        </Row>
-
-        {/* Quick Actions */}
-        <Title level={3} style={{ marginBottom: '24px', color: '#333' }}>
-          Quick Actions
-        </Title>
-        <Row gutter={[16, 16]} style={{ marginBottom: '32px' }}>
-          {quickActions.map((action, index) => (
-            <Col xs={24} md={8} key={index}>
-              <Card
-                hoverable
-                style={{
-                  borderRadius: '12px',
-                  height: '100%',
-                  borderLeft: `4px solid ${action.color}`
-                }}
-                bodyStyle={{ padding: '24px' }}
-              >
-                <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-                  <Title level={4} style={{ margin: 0, color: action.color }}>
-                    {action.title}
-                  </Title>
-                  <Paragraph style={{ margin: 0, color: '#666' }}>
-                    {action.description}
-                  </Paragraph>
-                  <Button 
-                    type="primary" 
-                    onClick={action.action}
-                    style={{ 
-                      background: action.color,
-                      borderColor: action.color 
-                    }}
-                  >
-                    Go
-                  </Button>
-                </Space>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-
         {/* Recent Activity */}
         <Card 
           title="Recent Activity" 
@@ -159,7 +46,7 @@ const Home = ({ user }) => {
             marginBottom: '32px'
           }}
         >
-          <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+          <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
             <div style={{ padding: '16px', background: '#f5f5f5', borderRadius: '8px' }}>
               <Paragraph style={{ margin: 0, color: '#666' }}>
                 <strong>Account Created:</strong> {new Date(user?.created_at).toLocaleDateString('en-US', {
@@ -198,4 +85,3 @@ Home.propTypes = {
 };
 
 export default Home;
-

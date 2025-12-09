@@ -28,21 +28,37 @@ const UserProfile = ({ user, onLogout }) => {
           borderRadius: '12px'
         }}
       >
-        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        <Space orientation="vertical" size="large" style={{ width: '100%' }}>
           <div style={{ textAlign: 'center' }}>
             <Title level={2} style={{ color: '#667eea', marginBottom: '24px' }}>
               User Profile
             </Title>
             
-            <Avatar 
-              size={120} 
-              src={user.profile_picture}
-              icon={!user.profile_picture && <UserOutlined />}
-              style={{ 
-                marginBottom: '24px',
-                border: '4px solid #667eea'
-              }}
-            />
+            {user.profile_picture ? (
+              <img 
+                src={user.profile_picture}
+                referrerPolicy="no-referrer"
+                alt="profile"
+                style={{ 
+                  width: '120px', 
+                  height: '120px', 
+                  borderRadius: '50%', 
+                  objectFit: 'cover',
+                  border: '4px solid #667eea',
+                  marginBottom: '24px',
+                  display: 'inline-block'
+                }}
+              />
+            ) : (
+              <Avatar 
+                size={120} 
+                icon={<UserOutlined />}
+                style={{ 
+                  marginBottom: '24px',
+                  border: '4px solid #667eea'
+                }}
+              />
+            )}
           </div>
 
           <Descriptions 
