@@ -1,15 +1,19 @@
 import { GoogleLogin } from '@react-oauth/google';
 import { Card, message, Alert } from 'antd';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 import { authenticateWithGoogle } from '../services/authService';
 
 const Login = ({ onLoginSuccess, hasConfigError }) => {
+  const navigate = useNavigate();
+
   const handleSuccess = async (credentialResponse) => {
     try {
       message.loading({ content: 'Authenticating...', key: 'auth' });
       const data = await authenticateWithGoogle(credentialResponse.credential);
       message.success({ content: 'Login successful!', key: 'auth', duration: 2 });
       onLoginSuccess(data.user);
+      navigate('/home');
     } catch (error) {
       message.error({ 
         content: `Login failed: ${error.response?.data?.detail || error.message}`, 
