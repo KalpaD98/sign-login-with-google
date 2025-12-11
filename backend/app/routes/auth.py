@@ -6,10 +6,10 @@ import logging
 
 from app.core.database import get_db
 from app.core.config import settings
-from app.core.security import create_access_token
 from app.core.dependencies import get_current_user
 from app.models.user import User
 from app.schemas.user import GoogleAuthResponse, GoogleTokenRequest, UserResponse
+from app.services.auth_service import AuthService
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -51,40 +51,17 @@ def google_auth(token_request: GoogleTokenRequest, db: Session = Depends(get_db)
                 detail="Email not found in Google token"
             )
         
-        # Check if user exists
-        user = db.query(User).filter(User.email == email).first()
-        
-        if not user:
-            # Create new user
-            logger.info(f"Creating new user with email: {email}")
-            user = User(
-                email=email,
-                first_name=first_name,
-                last_name=last_name,
-                profile_picture=profile_picture,
-                google_id=google_id
-            )
-            db.add(user)
-            db.commit()
-            db.refresh(user)
-        else:
-            # Update existing user information
-            logger.info(f"Updating existing user: {email}")
-            user.first_name = first_name
-            user.last_name = last_name
-            user.profile_picture = profile_picture
-            user.google_id = google_id
-            db.commit()
-            db.refresh(user)
-        
-        # Create access token
-        access_token = create_access_token(data={"sub": str(user.id), "email": user.email})
-        
-        return GoogleAuthResponse(
-            access_token=access_token,
-            token_type="bearer",
-            user=UserResponse.model_validate(user)
+        # Use auth service to handle user creation/update and token generation
+        auth_service = AuthService(db)
+        user = auth_service.get_or_create_user(
+            email=email,
+            google_id=google_id,
+            first_name=first_name,
+            last_name=last_name,
+            profile_picture=profile_picture
         )
+        
+        return auth_service.authenticate_user(user)
         
     except ValueError as e:
         # Invalid token - log detailed error but return generic message

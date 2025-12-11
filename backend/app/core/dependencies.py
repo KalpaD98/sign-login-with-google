@@ -9,6 +9,7 @@ from typing import Optional
 from app.core.database import get_db
 from app.core.security import verify_token
 from app.models.user import User
+from app.services.auth_service import AuthService
 
 security = HTTPBearer()
 
@@ -50,9 +51,10 @@ def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    # Get user from database
+    # Get user from database via service layer
     try:
-        user = db.query(User).filter(User.id == int(user_id)).first()
+        auth_service = AuthService(db)
+        user = auth_service.get_user_by_id(int(user_id))
     except ValueError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
