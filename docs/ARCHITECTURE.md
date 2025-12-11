@@ -48,6 +48,25 @@ End-to-end overview of the Google Sign-In demo across frontend, backend, and dat
 - **Backend**: `DATABASE_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, `SECRET_KEY`, `ACCESS_TOKEN_EXPIRE_MINUTES`, `CORS_ORIGINS`
 
 ## Running the Stack (summary)
-- Run PostgreSQL and apply migrations: `alembic upgrade head`.
-- Start backend (FastAPI with Uvicorn): `uvicorn app.main:app --reload`.
-- Start frontend (Vite): `npm install && npm run dev` in `frontend/`.
+
+> **⚠️ First-time setup required**: Before running the stack, please follow the [Quick Start Guide](QUICKSTART.md) to configure Google OAuth credentials and set up environment variables.
+
+### Using Docker + Make (Recommended - Easier)
+The easiest way to run the entire stack is using Docker Compose with Make:
+
+1. **Setup** (first time only): `make setup` - Creates `.env` files and installs dependencies
+2. **Start all services**: `make docker-up` - Starts PostgreSQL, backend, and frontend in containers
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:8000
+   - API Docs: http://localhost:8000/docs
+3. **View logs**: `make docker-logs` (or `make docker-logs-backend`, `make docker-logs-frontend`)
+4. **Stop services**: `make docker-down`
+
+**Note**: Migrations run automatically on backend startup. Source code changes are hot-reloaded in development mode.
+
+### Manual Setup (Alternative)
+If you prefer running services locally without Docker:
+
+1. **Database**: Run PostgreSQL locally and apply migrations: `cd backend && alembic upgrade head`
+2. **Backend**: `cd backend && uvicorn app.main:app --reload`
+3. **Frontend**: `cd frontend && npm install && npm run dev`
