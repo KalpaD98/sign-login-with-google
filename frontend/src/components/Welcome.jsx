@@ -1,8 +1,15 @@
-import { Typography } from 'antd';
+import { Button, Typography } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const { Title, Paragraph } = Typography;
 
 const Welcome = () => {
+  const navigate = useNavigate();
+
+  const handleSignIn = () => {
+    navigate('/login');
+  };
+
   return (
     <div
       style={{
@@ -19,6 +26,9 @@ const Welcome = () => {
       <Paragraph style={{ fontSize: '18px', maxWidth: '600px' }}>
         Welcome to our platform. Sign in with Google to get started.
       </Paragraph>
+      <Button type="primary" size="large" onClick={handleSignIn}>
+        Sign in
+      </Button>
     </div>
   );
 };

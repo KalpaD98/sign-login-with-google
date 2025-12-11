@@ -1,5 +1,5 @@
 import { Layout, Menu, Button, Avatar, Dropdown, Space } from 'antd';
-import { HomeOutlined, UserOutlined, LogoutOutlined, LoginOutlined, AppstoreOutlined } from '@ant-design/icons';
+import { HomeOutlined, UserOutlined, LogoutOutlined, LoginOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { logout } from '../services/authService';
@@ -37,7 +37,6 @@ const Navbar = ({ user, onLogout }) => {
 
   const getSelectedKey = () => {
     const path = location.pathname;
-    if (path === '/') return 'welcome';
     if (path === '/home') return 'home';
     if (path === '/profile') return 'profile';
     return '';
@@ -56,14 +55,7 @@ const Navbar = ({ user, onLogout }) => {
       label: 'Profile',
       onClick: () => navigate('/profile'),
     },
-  ] : [
-    {
-      key: 'welcome',
-      icon: <AppstoreOutlined />,
-      label: 'Welcome',
-      onClick: () => navigate('/'),
-    },
-  ];
+  ] : [];
 
   return (
     <Header 
@@ -91,10 +83,10 @@ const Navbar = ({ user, onLogout }) => {
           alignItems: 'center',
           gap: '8px'
         }}
-        onClick={() => navigate(user ? '/home' : '/')}
+        onClick={() => navigate(user ? '/home' : '/login')}
       >
         <span style={{ fontSize: '28px' }}>🚀</span>
-        <span>MyApp</span>
+        <span>Sign With Google Demo</span>
       </div>
 
       {/* Navigation Menu */}
