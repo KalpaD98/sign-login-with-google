@@ -4,7 +4,6 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { message, Alert, Layout } from 'antd';
 import Login from './components/Login';
 import UserProfile from './components/UserProfile';
-import Welcome from './components/Welcome';
 import Home from './components/Home';
 import Navbar from './components/Navbar';
 import { getStoredUser } from './services/authService';
@@ -64,6 +63,8 @@ function App() {
     return children;
   };
 
+  const rootRedirect = '/login';
+
   return (
     <Router>
       {hasConfigError && (
@@ -89,11 +90,8 @@ function App() {
           <Navbar user={user} onLogout={handleLogout} />
           <Content>
             <Routes>
-              {/* Welcome Page - accessible to all */}
-              <Route 
-                path="/" 
-                element={<Welcome isAuthenticated={!!user} />} 
-              />
+              {/* Root - redirect to appropriate page */}
+              <Route path="/" element={<Navigate to={rootRedirect} replace />} />
               
               {/* Login Page - redirect to home if already logged in */}
               <Route 
@@ -127,8 +125,8 @@ function App() {
                 } 
               />
 
-              {/* Catch all - redirect to welcome */}
-              <Route path="*" element={<Navigate to="/" replace />} />
+              {/* Catch all - redirect to root */}
+              <Route path="*" element={<Navigate to={rootRedirect} replace />} />
             </Routes>
           </Content>
         </Layout>

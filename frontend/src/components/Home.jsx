@@ -56,11 +56,7 @@ const Home = ({ user }) => {
                 })}
               </Paragraph>
             </div>
-            <div style={{ padding: '16px', background: '#f5f5f5', borderRadius: '8px' }}>
-              <Paragraph style={{ margin: 0, color: '#666' }}>
-                <strong>Last Login:</strong> Today
-              </Paragraph>
-            </div>
+
             <div style={{ padding: '16px', background: '#f5f5f5', borderRadius: '8px' }}>
               <Paragraph style={{ margin: 0, color: '#666' }}>
                 <strong>Email Verified:</strong> ✓ {user?.email}
