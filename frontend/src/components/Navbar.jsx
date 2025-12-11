@@ -68,70 +68,99 @@ const Navbar = ({ user, onLogout }) => {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '0 24px',
-        background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+        background: '#1677ff',
+        borderBottom: '1px solid rgba(255,255,255,0.1)',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
       }}
     >
       {/* Logo/Brand */}
       <div 
         style={{ 
           color: 'white', 
-          fontSize: '24px', 
-          fontWeight: 'bold',
+          fontSize: 'clamp(16px, 2.5vw, 20px)', 
+          fontWeight: '600',
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
-          gap: '8px'
+          gap: '12px',
+          letterSpacing: '-0.5px'
         }}
         onClick={() => navigate(user ? '/home' : '/login')}
       >
-        <span style={{ fontSize: '28px' }}>🚀</span>
-        <span>Sign With Google Demo</span>
+        <Avatar 
+          size={32}
+          style={{ 
+            background: 'rgba(255,255,255,0.2)',
+            color: 'white',
+            border: '2px solid rgba(255,255,255,0.3)',
+            flexShrink: 0
+          }}
+        >
+          <UserOutlined />
+        </Avatar>
+        <span style={{ whiteSpace: 'nowrap' }}>Sign With Google</span>
       </div>
 
       {/* Navigation Menu */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-        <Menu
-          mode="horizontal"
-          selectedKeys={[getSelectedKey()]}
-          items={menuItems}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            minWidth: '200px',
-          }}
-          theme="dark"
-        />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(12px, 2vw, 24px)', flexWrap: 'wrap' }}>
+        {user && (
+          <Menu
+            mode="horizontal"
+            selectedKeys={[getSelectedKey()]}
+            items={menuItems}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              minWidth: '200px',
+              color: 'white',
+              flex: '1 1 auto'
+            }}
+            theme="dark"
+          />
+        )}
 
         {/* User Section */}
         {user ? (
           <Dropdown
             menu={{ items: userMenuItems }}
             placement="bottomRight"
-            arrow
+            arrow={{ pointAtCenter: true }}
           >
-            <Space style={{ cursor: 'pointer' }}>
+            <Space 
+              style={{ 
+                cursor: 'pointer', 
+                padding: '4px 8px', 
+                borderRadius: '8px', 
+                transition: 'background 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent';
+              }}
+            >
               {user.profile_picture ? (
-                <img 
+                <Avatar 
                   src={user.profile_picture}
-                  referrerPolicy="no-referrer"
-                  alt="profile"
+                  size={32}
                   style={{ 
-                    width: '32px', 
-                    height: '32px', 
-                    borderRadius: '50%', 
-                    objectFit: 'cover',
-                    border: '2px solid white',
+                    border: '2px solid rgba(255,255,255,0.3)',
                     display: 'block'
                   }}
+                  referrerPolicy="no-referrer"
                 />
               ) : (
                 <Avatar 
                   icon={<UserOutlined />}
-                  style={{ border: '2px solid white' }}
+                  size={32}
+                  style={{ 
+                    border: '2px solid rgba(255,255,255,0.3)',
+                    background: 'rgba(255,255,255,0.2)'
+                  }}
                 />
               )}
-              <span style={{ color: 'white', fontWeight: '500' }}>
+              <span style={{ color: 'white', fontWeight: '500', fontSize: '14px' }}>
                 {user.first_name || 'User'}
               </span>
             </Space>
@@ -141,13 +170,11 @@ const Navbar = ({ user, onLogout }) => {
             type="primary"
             icon={<LoginOutlined />}
             onClick={() => navigate('/login')}
+            ghost
             style={{
-              background: 'white',
-              color: '#667eea',
-              border: 'none',
-              fontWeight: 'bold',
               height: '40px',
-              padding: '0 24px'
+              padding: '0 20px',
+              fontWeight: '500'
             }}
           >
             Login

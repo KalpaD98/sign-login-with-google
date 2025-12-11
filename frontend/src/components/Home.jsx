@@ -1,68 +1,75 @@
-import { Card, Typography, Space } from 'antd';
+import { Card, Typography, Row, Col, Avatar } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
 const { Title, Paragraph } = Typography;
 
 const Home = ({ user }) => {
-
   return (
     <div style={{ 
       minHeight: 'calc(100vh - 64px)',
-      background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-      padding: '40px 20px'
+      background: '#f0f2f5',
+      padding: '40px 20px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
     }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        {/* Welcome Section */}
+      <div style={{ maxWidth: '800px', width: '100%' }}>
         <Card 
           style={{ 
-            marginBottom: '32px',
             borderRadius: '12px',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            border: 'none'
+            border: 'none',
+            background: 'linear-gradient(135deg, #1677ff 0%, #0958d9 100%)',
+            textAlign: 'center'
           }}
+          bodyStyle={{ padding: '60px 40px' }}
         >
-          <Space orientation="vertical" size="small">
-            <Title 
-              level={2} 
-              style={{ 
-                color: 'white', 
-                margin: 0,
-                fontSize: '32px'
-              }}
-            >
-              Welcome back, {user?.first_name || 'User'}! 👋
-            </Title>
-            <Paragraph style={{ color: 'white', margin: 0, fontSize: '16px' }}>
-              Here's what's happening with your account today.
-            </Paragraph>
-          </Space>
-        </Card>
-
-        {/* Recent Activity */}
-        <Card 
-          title="Recent Activity" 
-          style={{ 
-            borderRadius: '12px',
-            marginBottom: '32px'
-          }}
-        >
-          <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
-            <div style={{ padding: '16px', background: '#f5f5f5', borderRadius: '8px' }}>
-              <Paragraph style={{ margin: 0, color: '#666' }}>
-                <strong>Account Created:</strong> {new Date(user?.created_at).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
-              </Paragraph>
-            </div>
-
-            <div style={{ padding: '16px', background: '#f5f5f5', borderRadius: '8px' }}>
-              <Paragraph style={{ margin: 0, color: '#666' }}>
-                <strong>Email Verified:</strong> ✓ {user?.email}
-              </Paragraph>
-            </div>
-          </Space>
+          <Row justify="center" style={{ marginBottom: '32px' }}>
+            {user?.profile_picture ? (
+              <Avatar 
+                src={user.profile_picture}
+                size={120}
+                style={{ 
+                  border: '4px solid rgba(255,255,255,0.3)',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                }}
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              <Avatar 
+                icon={<UserOutlined />}
+                size={120}
+                style={{ 
+                  border: '4px solid rgba(255,255,255,0.3)',
+                  background: 'rgba(255,255,255,0.2)',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                }}
+              />
+            )}
+          </Row>
+          
+          <Title 
+            level={1} 
+            style={{ 
+              color: 'white', 
+              margin: 0,
+              fontSize: 'clamp(32px, 5vw, 48px)',
+              marginBottom: '16px'
+            }}
+          >
+            Welcome, {user?.first_name || 'User'}! 👋
+          </Title>
+          
+          <Paragraph style={{ 
+            color: 'rgba(255,255,255,0.9)', 
+            margin: 0, 
+            fontSize: 'clamp(16px, 2vw, 20px)',
+            maxWidth: '600px',
+            margin: '0 auto'
+          }}>
+            You've successfully signed in with your Google account. 
+            Use the navigation menu to access your profile and other features.
+          </Paragraph>
         </Card>
       </div>
     </div>
