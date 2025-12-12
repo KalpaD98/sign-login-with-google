@@ -1,0 +1,42 @@
+# CodeQL Configuration File
+# This file customizes CodeQL behavior for this repository
+
+name: "CodeQL Configuration"
+
+# Disable specific queries or add custom ones
+# queries:
+#   - name: Add custom queries
+#     uses: ./custom-queries
+
+# Define paths to analyze/exclude
+paths:
+  # Include all source files
+  - src
+  - app
+  - backend/app
+  - frontend/src
+
+paths-ignore:
+  # Exclude test files from analysis
+  - "**/test/**"
+  - "**/tests/**"
+  - "**/*.test.js"
+  - "**/*.test.jsx"
+  - "**/*.spec.js"
+  - "**/*.spec.jsx"
+  # Exclude build and dependency directories
+  - "**/node_modules/**"
+  - "**/dist/**"
+  - "**/__pycache__/**"
+  - "**/.venv/**"
+  - "**/venv/**"
+  - "**/build/**"
+
+# Disable default queries and use security-focused queries only
+disable-default-queries: false
+
+# Additional configuration options
+# advanced:
+#   # For interpreted languages, use the "none" build mode
+#   # This is the default for Python and JavaScript
+#   internal-node-id: 1
