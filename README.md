@@ -136,6 +136,19 @@ This project is licensed under the MIT License.
 
 - **[QUICKSTART.md](docs/QUICKSTART.md)** - Complete setup guide with troubleshooting
 - **[CONTRIBUTING.md](docs/CONTRIBUTING.md)** - Contribution guidelines
+- **[CODEQL_SETUP.md](docs/CODEQL_SETUP.md)** - CodeQL static analysis setup and usage
+- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - Project architecture documentation
+
+## Security & Code Quality
+
+This project uses **CodeQL** for continuous static analysis:
+
+- **Automated Security Scanning**: CodeQL runs on every push and pull request
+- **Vulnerability Detection**: Identifies potential security issues in Python and JavaScript code
+- **Code Quality Analysis**: Detects code quality issues and best practice violations
+- **Results**: Available in the GitHub **Security** tab under **Code scanning alerts**
+
+For details, see [CODEQL_SETUP.md](docs/CODEQL_SETUP.md).
 
 ## Acknowledgments
 
@@ -143,3 +156,4 @@ This project is licensed under the MIT License.
 - React team for React 19
 - Ant Design team for the UI components
 - FastAPI team for the excellent framework
+- GitHub CodeQL for security analysis

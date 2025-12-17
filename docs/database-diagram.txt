@@ -1,0 +1,13 @@
+// Database Schema Diagram for Sign-Login-with-Google Project
+// Copy and paste this code into https://dbdiagram.io/ to visualize the database
+
+Table users {
+  id integer [primary key, increment]
+  email varchar [unique, not null]
+  first_name varchar
+  last_name varchar
+  profile_picture varchar
+  google_id varchar [unique]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp
+}
